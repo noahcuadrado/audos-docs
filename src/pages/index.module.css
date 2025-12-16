@@ -1,0 +1,368 @@
+/**
+ * Audos Documentation - Homepage Styles
+ * Based on Audos Dashboard design system
+ */
+
+/* Hero Section */
+.heroBanner {
+  position: relative;
+  padding: 6rem 0 4rem;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+}
+
+.heroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 50% -20%, rgba(0, 115, 206, 0.2) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroTitle {
+  font-family: 'Sora', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.85) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.heroSubtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.heroButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Hero Buttons - Fixed hover animations */
+.heroButtonPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  border-radius: 100px;
+  background: #0073ce !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: 
+    0 4px 14px rgba(0, 115, 206, 0.4),
+    inset 0.8px 0.76px 4px 0 rgba(211, 209, 202, 0.14);
+  transition: all 0.2s ease;
+}
+
+.heroButtonPrimary:hover {
+  background: #0080e4 !important;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(0, 115, 206, 0.5),
+    inset 0.8px 0.76px 4px 0 rgba(211, 209, 202, 0.14);
+  color: white !important;
+}
+
+.heroButtonSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  border-radius: 100px;
+  background: rgba(66, 66, 66, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  box-shadow: inset 0.8px 0.76px 4px 0 rgba(211, 209, 202, 0.14);
+  transition: all 0.2s ease;
+}
+
+.heroButtonSecondary:hover {
+  background: rgba(80, 80, 80, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-2px);
+  color: white !important;
+}
+
+/* Stats Section */
+.statsSection {
+  background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.statsGrid {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statNumber {
+  font-family: 'Sora', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0073ce;
+  display: block;
+}
+
+.statLabel {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Quick Navigation */
+.quickNavSection {
+  background: #000000;
+  padding: 3rem 0;
+}
+
+.quickNavGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.quickNavCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(180deg, #171717 60%, #101010 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.quickNavCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 115, 206, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 115, 206, 0.15);
+  color: white;
+}
+
+.quickNavCard:hover .quickNavIcon {
+  color: #0073ce;
+}
+
+.quickNavIcon {
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.2s ease;
+}
+
+.quickNavLabel {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Docs Section */
+.docsSection {
+  background: #000000;
+  padding: 4rem 0;
+}
+
+.architectureSection {
+  background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-family: 'Sora', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.sectionDescription {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.docsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Doc Card */
+.docCard {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(180deg, #171717 60%, #101010 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  gap: 1rem;
+  color: white;
+}
+
+.docCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 115, 206, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 115, 206, 0.1);
+  color: white;
+}
+
+.docCard:hover .docCardArrow {
+  transform: translateX(4px);
+  color: #0073ce;
+}
+
+.docCard:hover .docCardIcon {
+  color: #0073ce;
+}
+
+.docCardIcon {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.2s ease;
+}
+
+.docCardContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.docCardTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 0.25rem 0;
+}
+
+.docCardDescription {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.docCardArrow {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 4rem 1.5rem 3rem;
+    min-height: auto;
+  }
+  
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+  
+  .heroSubtitle {
+    font-size: 1.125rem;
+  }
+  
+  .statsGrid {
+    gap: 2rem;
+  }
+  
+  .quickNavGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .docsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+  
+  .heroButtons {
+    flex-direction: column;
+  }
+  
+  .heroButtonPrimary,
+  .heroButtonSecondary {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+  
+  .quickNavGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .quickNavCard {
+    padding: 1rem;
+  }
+  
+  .quickNavLabel {
+    font-size: 0.75rem;
+  }
+  
+  .docCard {
+    padding: 1rem;
+  }
+}

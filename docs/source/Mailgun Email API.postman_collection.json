@@ -1,0 +1,535 @@
+{
+	"info": {
+		"_postman_id": "d560cd71-f0c6-4ca4-9c94-a42b8335174b",
+		"name": "Mailgun Email API",
+		"description": "Complete Mailgun email integration API for sending emails, tracking delivery, and managing email messages.\n\n## Authentication\nMost endpoints require JWT Bearer token authentication. Add your JWT token to the Authorization header.\n\n## Base URL\nUpdate the `baseUrl` variable with your domain.\n\n## Environment Variables\n- `baseUrl`: Your API base URL (e.g., https://your-domain.com)\n- `jwtToken`: Your JWT authentication token\n- `workspaceId`: Workspace ID for testing\n- `testEmail`: Email address for testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43314662",
+		"_collection_link": "https://lunar-escape-826616.postman.co/workspace/741e2a20-0047-4eba-8e76-85e9bd2f42a2/collection/33570542-d560cd71-f0c6-4ca4-9c94-a42b8335174b?action=share&source=collection_link&creator=43314662"
+	},
+	"item": [
+		{
+			"name": "Email Operations",
+			"item": [
+				{
+					"name": "Send Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"workspaceId\": \"{{workspaceId}}\",\n  \"to\": \"{{testEmail}}\",\n  \"subject\": \"Test Email from Postman\",\n  \"text\": \"This is a test email sent from Postman at {{$timestamp}}\",\n  \"html\": \"<h1>Test Email</h1><p>This is a test email sent from Postman.</p><p><strong>Sent at:</strong> {{$timestamp}}</p>\",\n  \"metadata\": {\n    \"source\": \"postman\",\n    \"test\": true,\n    \"timestamp\": \"{{$timestamp}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mailgun/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mailgun",
+								"send"
+							]
+						},
+						"description": "Send an email via Mailgun and store it in the database.\n\n**Authentication:** JWT Bearer token required\n\n**Required fields:**\n- workspaceId: ID of the workspace\n- to: Recipient email address\n- subject: Email subject line\n- text: Plain text email content\n\n**Optional fields:**\n- html: HTML email content\n- from: Custom sender email\n- replyTo: Reply-to email address\n- sessionId: Workspace session ID\n- userId: Workspace user ID\n- contactId: Funnel contact ID\n- metadata: Custom key-value pairs"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"workspaceId\": \"workspace-123\",\n  \"to\": \"user@example.com\",\n  \"subject\": \"Test Email\",\n  \"text\": \"Test content\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/mailgun/send",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"mailgun",
+										"send"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"id\": \"email-uuid-123\",\n  \"uuid\": \"email-abc-def-456\",\n  \"mailgunMessageId\": \"<20251209120000.1.abc@m.audoapps.com>\",\n  \"status\": \"sent\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Send Email with Session Link",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"workspaceId\": \"{{workspaceId}}\",\n  \"to\": \"{{testEmail}}\",\n  \"subject\": \"Email Linked to Session\",\n  \"text\": \"This email is linked to a workspace session.\",\n  \"html\": \"<h1>Session Email</h1><p>This email is linked to a workspace session.</p>\",\n  \"sessionId\": \"wses_7a2219c3d54a45eaa277046abebee943\",\n  \"sessionUuid\": \"space-me+crickify1@ehussain.in-7cd75493-4d0a-407b-a8dd-de74f864c6ae\",\n  \"userId\": \"\",\n  \"metadata\": {\n    \"campaign\": \"onboarding\",\n    \"step\": \"welcome\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/mailgun/send",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mailgun",
+								"send"
+							]
+						},
+						"description": "Send an email linked to a workspace session. This allows tracking email conversations as part of a user session."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Email Messages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/mailgun/messages/{{workspaceId}}?limit=50&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mailgun",
+								"messages",
+								"{{workspaceId}}"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50",
+									"description": "Number of messages to return (1-100)"
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"description": "Pagination offset"
+								},
+								{
+									"key": "direction",
+									"value": "outbound",
+									"description": "Filter by direction: inbound or outbound",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "delivered",
+									"description": "Filter by status",
+									"disabled": true
+								},
+								{
+									"key": "from",
+									"value": "noreply",
+									"description": "Filter by sender email (partial match)",
+									"disabled": true
+								},
+								{
+									"key": "to",
+									"value": "user@example.com",
+									"description": "Filter by recipient email (partial match)",
+									"disabled": true
+								},
+								{
+									"key": "startDate",
+									"value": "2025-12-01T00:00:00Z",
+									"description": "Filter by start date (ISO 8601)",
+									"disabled": true
+								},
+								{
+									"key": "endDate",
+									"value": "2025-12-31T23:59:59Z",
+									"description": "Filter by end date (ISO 8601)",
+									"disabled": true
+								},
+								{
+									"key": "sessionId",
+									"value": "session-456",
+									"description": "Filter by workspace session ID",
+									"disabled": true
+								},
+								{
+									"key": "contactId",
+									"value": "contact-789",
+									"description": "Filter by funnel contact ID",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Retrieve email messages for a workspace with pagination and filtering.\n\n**Query Parameters:**\n- limit (optional): Number of messages (1-100, default 50)\n- offset (optional): Pagination offset (default 0)\n- direction (optional): inbound or outbound\n- status (optional): pending, sent, delivered, failed, bounced, opened, clicked\n- from (optional): Filter by sender (partial match)\n- to (optional): Filter by recipient (partial match)\n- startDate (optional): ISO 8601 date\n- endDate (optional): ISO 8601 date\n- sessionId (optional): Workspace session ID\n- contactId (optional): Funnel contact ID"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/mailgun/messages/workspace-123?limit=50",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"mailgun",
+										"messages",
+										"workspace-123"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "50"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"messages\": [\n    {\n      \"id\": \"email-123\",\n      \"uuid\": \"email-abc-123\",\n      \"workspaceId\": \"workspace-123\",\n      \"direction\": \"outbound\",\n      \"from\": \"Audos <noreply@m.audoapps.com>\",\n      \"to\": \"user@example.com\",\n      \"subject\": \"Welcome Email\",\n      \"status\": \"delivered\",\n      \"deliveredAt\": \"2025-12-09T12:30:00Z\",\n      \"createdAt\": \"2025-12-09T12:00:00Z\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 150,\n    \"limit\": 50,\n    \"offset\": 0,\n    \"hasMore\": true\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Outbound Emails",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/mailgun/messages/{{workspaceId}}?direction=outbound&limit=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mailgun",
+								"messages",
+								"{{workspaceId}}"
+							],
+							"query": [
+								{
+									"key": "direction",
+									"value": "outbound"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Get only outbound (sent) emails for a workspace."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Delivered Emails",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/mailgun/messages/{{workspaceId}}?status=delivered&limit=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mailgun",
+								"messages",
+								"{{workspaceId}}"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "delivered"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Get only delivered emails for a workspace."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Emails by Date Range",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/mailgun/messages/{{workspaceId}}?startDate=2025-12-01T00:00:00Z&endDate=2025-12-31T23:59:59Z",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mailgun",
+								"messages",
+								"{{workspaceId}}"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2025-12-01T00:00:00Z"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-12-31T23:59:59Z"
+								}
+							]
+						},
+						"description": "Get emails within a specific date range."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Email Message",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/mailgun/messages/{{workspaceId}}/{{emailId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mailgun",
+								"messages",
+								"{{workspaceId}}",
+								"{{emailId}}"
+							]
+						},
+						"description": "Retrieve a specific email message by ID or UUID.\n\n**URL Parameters:**\n- workspaceId: ID of the workspace\n- emailId: Email message ID or UUID"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/mailgun/messages/workspace-123/email-abc-123",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"mailgun",
+										"messages",
+										"workspace-123",
+										"email-abc-123"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"email-123\",\n  \"uuid\": \"email-abc-123\",\n  \"workspaceId\": \"workspace-123\",\n  \"mailgunMessageId\": \"<20251209120000.1.abc@m.audoapps.com>\",\n  \"direction\": \"outbound\",\n  \"from\": \"Audos <noreply@m.audoapps.com>\",\n  \"to\": \"user@example.com\",\n  \"subject\": \"Welcome Email\",\n  \"bodyPlain\": \"Plain text content\",\n  \"bodyHtml\": \"<h1>Welcome</h1>\",\n  \"status\": \"delivered\",\n  \"deliveredAt\": \"2025-12-09T12:30:00Z\",\n  \"openedAt\": \"2025-12-09T12:35:00Z\",\n  \"createdAt\": \"2025-12-09T12:00:00Z\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints for sending emails and retrieving email messages."
+		},
+		{
+			"name": "System",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/mailgun/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"mailgun",
+								"health"
+							]
+						},
+						"description": "Check if the Mailgun service is properly configured and ready.\n\n**Authentication:** Not required\n\n**Response Codes:**\n- 200: Service is configured and ready\n- 503: Service is not configured"
+					},
+					"response": [
+						{
+							"name": "Service Configured",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/mailgun/health",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"mailgun",
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": \"ok\",\n  \"configured\": true,\n  \"domain\": \"m.audoapps.com\",\n  \"defaultFrom\": \"noreply@m.audoapps.com\"\n}"
+						},
+						{
+							"name": "Service Not Configured",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/mailgun/health",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"mailgun",
+										"health"
+									]
+								}
+							},
+							"status": "Service Unavailable",
+							"code": 503,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": \"not_configured\",\n  \"configured\": false,\n  \"domain\": \"\",\n  \"defaultFrom\": null\n}"
+						}
+					]
+				}
+			],
+			"description": "System health and status endpoints."
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://your-domain.com",
+			"type": "string"
+		},
+		{
+			"key": "jwtToken",
+			"value": "your-jwt-token-here",
+			"type": "string"
+		},
+		{
+			"key": "workspaceId",
+			"value": "workspace-123",
+			"type": "string"
+		},
+		{
+			"key": "testEmail",
+			"value": "me@ehussain.in",
+			"type": "string"
+		},
+		{
+			"key": "emailId",
+			"value": "email-abc-123",
+			"type": "string"
+		}
+	]
+}

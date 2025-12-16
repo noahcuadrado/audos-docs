@@ -1,0 +1,417 @@
+/**
+ * Audos Documentation - Custom CSS
+ * Based on Audos Dashboard design system
+ */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap');
+
+/* Audos Design System Variables */
+:root {
+  /* Primary Colors */
+  --ifm-color-primary: #0073ce;
+  --ifm-color-primary-dark: #0066b8;
+  --ifm-color-primary-darker: #0060ad;
+  --ifm-color-primary-darkest: #004f8f;
+  --ifm-color-primary-light: #0080e4;
+  --ifm-color-primary-lighter: #0086ef;
+  --ifm-color-primary-lightest: #1a97ff;
+  
+  /* Typography */
+  --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ifm-heading-font-family: 'Sora', 'Inter', sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  
+  /* Code */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 115, 206, 0.1);
+  
+  /* Border Radius */
+  --ifm-border-radius: 12px;
+  --ifm-button-border-radius: 8px;
+  --ifm-card-border-radius: 18px;
+  
+  /* Navbar */
+  --ifm-navbar-height: 64px;
+}
+
+/* Dark theme (default for Audos) */
+[data-theme='dark'] {
+  /* Primary Colors */
+  --ifm-color-primary: #0073ce;
+  --ifm-color-primary-dark: #0066b8;
+  --ifm-color-primary-darker: #0060ad;
+  --ifm-color-primary-darkest: #004f8f;
+  --ifm-color-primary-light: #0080e4;
+  --ifm-color-primary-lighter: #1a8fff;
+  --ifm-color-primary-lightest: #4da6ff;
+  
+  /* Background Colors */
+  --ifm-background-color: #000000;
+  --ifm-background-surface-color: #171717;
+  --ifm-navbar-background-color: #000000;
+  --ifm-footer-background-color: #000000;
+  
+  /* Card Colors */
+  --audos-card-bg: linear-gradient(180deg, #171717 60%, #101010 100%);
+  --audos-card-secondary-bg: linear-gradient(180deg, #303030 60%, #282828 100%);
+  --audos-button-bg: linear-gradient(90deg, #424242 0%, #424242 100%);
+  
+  /* Text Colors */
+  --ifm-font-color-base: #ffffff;
+  --ifm-font-color-secondary: rgba(255, 255, 255, 0.5);
+  
+  /* Code Blocks */
+  --docusaurus-highlighted-code-line-bg: rgba(0, 115, 206, 0.3);
+  --ifm-code-background: #1e1e1e;
+  
+  /* Sidebar */
+  --doc-sidebar-background: #000000;
+  --ifm-toc-border-color: #303030;
+}
+
+/* Light theme */
+[data-theme='light'] {
+  --ifm-background-color: #f8fafc;
+  --ifm-background-surface-color: #ffffff;
+  --ifm-navbar-background-color: #ffffff;
+  --ifm-footer-background-color: #f1f5f9;
+  
+  --audos-card-bg: linear-gradient(180deg, #ffffff 60%, #f8fafc 100%);
+  --audos-card-secondary-bg: linear-gradient(180deg, #f1f5f9 60%, #e2e8f0 100%);
+  --audos-button-bg: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 100%);
+  
+  --ifm-font-color-secondary: rgba(0, 0, 0, 0.6);
+  --doc-sidebar-background: #ffffff;
+  --ifm-toc-border-color: #e2e8f0;
+}
+
+/* Navbar Styling */
+.navbar {
+  background: var(--ifm-navbar-background-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.navbar__title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.navbar__link {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Sidebar Styling */
+.theme-doc-sidebar-container {
+  background: var(--doc-sidebar-background);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.menu__link {
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.menu__link:hover {
+  background: rgba(0, 115, 206, 0.1);
+}
+
+.menu__link--active {
+  background: var(--ifm-color-primary) !important;
+  color: white !important;
+}
+
+/* Card Components */
+.card {
+  background: var(--audos-card-bg);
+  border-radius: var(--ifm-card-border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Button Styling */
+.button {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  border-radius: var(--ifm-button-border-radius);
+  transition: all 0.2s ease;
+}
+
+.button--primary {
+  background: var(--ifm-color-primary);
+  border: none;
+  box-shadow: inset 0.8px 0.76px 4px 0 rgba(211, 209, 202, 0.14);
+}
+
+.button--primary:hover {
+  background: var(--ifm-color-primary-light);
+  transform: translateY(-1px);
+}
+
+.button--secondary {
+  background: var(--audos-button-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.button--secondary:hover {
+  background: #4a4a4a;
+  color: white;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0, 115, 206, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero__title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero__subtitle {
+  font-family: 'Inter', sans-serif;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+/* Documentation Content */
+.markdown {
+  font-family: 'Inter', sans-serif;
+}
+
+.markdown h1, .markdown h2, .markdown h3, .markdown h4, .markdown h5, .markdown h6 {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Code Blocks */
+.prism-code {
+  font-family: var(--ifm-font-family-monospace);
+  border-radius: 12px;
+}
+
+/* Admonitions */
+.alert {
+  border-radius: 12px;
+  border-left-width: 4px;
+}
+
+/* Footer */
+.footer {
+  background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3rem 0 2rem;
+}
+
+.footer__links {
+  margin-bottom: 2rem;
+}
+
+.footer__col {
+  padding: 0 1rem;
+}
+
+.footer__title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.footer__item {
+  margin-bottom: 0.5rem;
+}
+
+.footer__link-item {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s ease;
+}
+
+.footer__link-item:hover {
+  color: #0073ce;
+}
+
+.footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+}
+
+.footer__copyright {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+}
+
+/* Light mode footer */
+[data-theme='light'] .footer {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .footer__title {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+[data-theme='light'] .footer__link-item {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='light'] .footer__link-item:hover {
+  color: #0073ce;
+}
+
+[data-theme='light'] .footer__bottom {
+  border-top-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='light'] .footer__copyright {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* Table Styling */
+table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th {
+  background: rgba(0, 115, 206, 0.1);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #505050;
+}
+
+/* Doc Page Layout */
+.docMainWrapper_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module {
+  background: var(--ifm-background-color);
+}
+
+/* Breadcrumbs */
+.breadcrumbs__link {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+
+/* Search */
+.DocSearch-Button {
+  border-radius: 8px !important;
+  background: var(--audos-button-bg) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* TOC */
+.table-of-contents__link {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+
+/* Pagination */
+.pagination-nav__link {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--audos-card-bg);
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+/* Navbar Logo Styling */
+.navbar__logo {
+  height: 28px;
+  margin-right: 0;
+}
+
+.navbar__brand {
+  margin-right: 1rem;
+}
+
+/* Remove any navbar title since we're using just the logo */
+.navbar__title {
+  display: none;
+}
+
+/* Improve navbar link styling */
+.navbar__item {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.navbar__link {
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.2s ease;
+}
+
+.navbar__link:hover {
+  color: white;
+}
+
+.navbar__link--active {
+  color: #0073ce;
+}
+
+/* Theme toggle button */
+[data-theme='dark'] .navbar__item button {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Mobile menu */
+.navbar-sidebar {
+  background: #000000;
+}
+
+.navbar-sidebar__brand {
+  background: #000000;
+}
