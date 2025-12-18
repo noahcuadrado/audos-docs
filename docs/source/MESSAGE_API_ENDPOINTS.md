@@ -95,6 +95,7 @@ curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message
     "id": "number",
     "uuid": "string",
     "workspaceId": "string",
+    "workspaceUserId": "number | null",
     "workspaceSessionId": "string",
     "workspaceSessionUuid": "string",
     "role": "user",
@@ -105,6 +106,8 @@ curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message
     "contextId": "string",
     "channel": "string",
     "username": "string",
+    "attachments": "array | null",
+    "summarizedUpto": "number | null",
     "createdAt": "Date",
     "updatedAt": "Date"
   },
@@ -120,6 +123,7 @@ curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message
     "id": "number",
     "uuid": "string",
     "workspaceId": "string",
+    "workspaceUserId": "number | null",
     "workspaceSessionId": "string",
     "workspaceSessionUuid": "string",
     "role": "user",
@@ -130,6 +134,8 @@ curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message
     "contextId": "string",
     "channel": "string",
     "username": "string",
+    "attachments": "array | null",
+    "summarizedUpto": "number | null",
     "createdAt": "Date",
     "updatedAt": "Date"
   },
@@ -137,6 +143,7 @@ curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message
     "id": "number",
     "uuid": "string",
     "workspaceId": "string",
+    "workspaceUserId": "number | null",
     "workspaceSessionId": "string",
     "workspaceSessionUuid": "string",
     "role": "assistant",
@@ -147,6 +154,8 @@ curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message
     "contextId": "string",
     "channel": "string",
     "username": "string",
+    "attachments": "array | null",
+    "summarizedUpto": "number | null",
     "createdAt": "Date",
     "updatedAt": "Date"
   }

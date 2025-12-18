@@ -135,6 +135,7 @@ Content-Type: application/json
     "id": "number",
     "uuid": "string",
     "workspaceId": "string",
+    "workspaceUserId": "number | null",
     "workspaceSessionId": "string",
     "workspaceSessionUuid": "string",
     "role": "user",
@@ -145,6 +146,8 @@ Content-Type: application/json
     "contextId": "string",
     "channel": "string",
     "username": "string",
+    "attachments": "array | null",
+    "summarizedUpto": "number | null",
     "createdAt": "Date",
     "updatedAt": "Date"
   },
@@ -161,6 +164,7 @@ Content-Type: application/json
     "id": "number",
     "uuid": "string",
     "workspaceId": "string",
+    "workspaceUserId": "number | null",
     "workspaceSessionId": "string",
     "workspaceSessionUuid": "string",
     "role": "user",
@@ -171,6 +175,8 @@ Content-Type: application/json
     "contextId": "string",
     "channel": "string",
     "username": "string",
+    "attachments": "array | null",
+    "summarizedUpto": "number | null",
     "createdAt": "Date",
     "updatedAt": "Date"
   },
@@ -178,6 +184,7 @@ Content-Type: application/json
     "id": "number",
     "uuid": "string",
     "workspaceId": "string",
+    "workspaceUserId": "number | null",
     "workspaceSessionId": "string",
     "workspaceSessionUuid": "string",
     "role": "assistant",
@@ -188,6 +195,8 @@ Content-Type: application/json
     "contextId": "string",
     "channel": "string",
     "username": "string",
+    "attachments": "array | null",
+    "summarizedUpto": "number | null",
     "createdAt": "Date",
     "updatedAt": "Date"
   }
