@@ -133,13 +133,20 @@ Content-Type: application/json
   "success": true,
   "userMessage": {
     "id": "number",
+    "uuid": "string",
     "workspaceId": "string",
     "workspaceSessionId": "string",
+    "workspaceSessionUuid": "string",
     "role": "user",
     "content": "string",
     "contentType": "text",
+    "messageType": "message",
+    "contextType": "string",
+    "contextId": "string",
     "channel": "string",
-    "createdAt": "Date"
+    "username": "string",
+    "createdAt": "Date",
+    "updatedAt": "Date"
   },
   "assistantMessage": null
 }
@@ -152,17 +159,37 @@ Content-Type: application/json
   "success": true,
   "userMessage": {
     "id": "number",
+    "uuid": "string",
     "workspaceId": "string",
     "workspaceSessionId": "string",
+    "workspaceSessionUuid": "string",
     "role": "user",
     "content": "string",
     "contentType": "text",
+    "messageType": "message",
+    "contextType": "string",
+    "contextId": "string",
     "channel": "string",
-    "createdAt": "Date"
+    "username": "string",
+    "createdAt": "Date",
+    "updatedAt": "Date"
   },
   "assistantMessage": {
-    "content": "string (full assistant response text)",
-    "eventCount": "number (count of streaming events)"
+    "id": "number",
+    "uuid": "string",
+    "workspaceId": "string",
+    "workspaceSessionId": "string",
+    "workspaceSessionUuid": "string",
+    "role": "assistant",
+    "content": "string (JSON string of events)",
+    "contentType": "json",
+    "messageType": "message",
+    "contextType": "string",
+    "contextId": "string",
+    "channel": "string",
+    "username": "string",
+    "createdAt": "Date",
+    "updatedAt": "Date"
   }
 }
 ```
@@ -203,14 +230,28 @@ curl -X POST "https://app.audos.com/api/workspace/79849043-88b5-40ba-a93a-c1e088
 {
   "success": true,
   "userMessage": {
-    "id": 456,
+    "id": 2574,
+    "uuid": "wmsg_d1b3e3c0440347a58d5840e0e2bf6346",
+    "workspaceId": "79849043-88b5-40ba-a93a-c1e088c4d9b0",
+    "workspaceSessionId": "wses_976cf4c4c61540539c7154f2bf9b0466",
     "role": "user",
-    "content": "What is my account balance?",
-    "createdAt": "2025-12-10T12:00:00.000Z"
+    "content": "Greet me with one line.",
+    "contentType": "text",
+    "channel": "api",
+    "createdAt": "2025-12-18T10:45:27.626Z",
+    "updatedAt": "2025-12-18T10:45:27.626Z"
   },
   "assistantMessage": {
-    "content": "Based on the latest data, your account balance is $1,234.56. Your last transaction was on December 8th for $50.00.",
-    "eventCount": 15
+    "id": 2575,
+    "uuid": "wmsg_df9f802909a345c49008697289ec2b01",
+    "workspaceId": "79849043-88b5-40ba-a93a-c1e088c4d9b0",
+    "workspaceSessionId": "wses_976cf4c4c61540539c7154f2bf9b0466",
+    "role": "assistant",
+    "content": "[{\"type\":\"progress\"...}]",
+    "contentType": "json",
+    "channel": "api",
+    "createdAt": "2025-12-18T10:45:38.259Z",
+    "updatedAt": "2025-12-18T10:45:38.259Z"
   }
 }
 ```
