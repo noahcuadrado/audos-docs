@@ -63,7 +63,8 @@ I've created a comprehensive documentation structure for the Audos platform base
   - Data flow diagrams
   - Integration points
   - Query examples
-  - Based on card: [0g8tGBdR](https://trello.com/c/0g8tGBdR/3176)
+  - Contact deduplication logic
+  - Based on cards: [0g8tGBdR](https://trello.com/c/0g8tGBdR/3176), Landing Register Dedupe Bug
 
 - **[Architecture Overview](./architecture/README.md)** ✅ Complete
   - System architecture overview

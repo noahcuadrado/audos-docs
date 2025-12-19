@@ -111,7 +111,7 @@ Send an email via Mailgun and store it in the database.
 #### Example: Basic Email
 
 ```bash
-curl -X POST "https://app.audos.com/api/mailgun/send" \
+curl -X POST "https://audos.com/api/mailgun/send" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
@@ -130,7 +130,7 @@ curl -X POST "https://app.audos.com/api/mailgun/send" \
 #### Example: Email with Session Link
 
 ```bash
-curl -X POST "https://app.audos.com/api/mailgun/send" \
+curl -X POST "https://audos.com/api/mailgun/send" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
@@ -203,28 +203,28 @@ Retrieve email messages for a workspace with pagination and filtering.
 #### Example: Get All Messages
 
 ```bash
-curl -X GET "https://app.audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?limit=50&offset=0" \
+curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?limit=50&offset=0" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
 #### Example: Get Outbound Emails
 
 ```bash
-curl -X GET "https://app.audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?direction=outbound&limit=20" \
+curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?direction=outbound&limit=20" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
 #### Example: Get Delivered Emails
 
 ```bash
-curl -X GET "https://app.audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?status=delivered&limit=20" \
+curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?status=delivered&limit=20" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
 #### Example: Get Emails by Date Range
 
 ```bash
-curl -X GET "https://app.audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?startDate=2025-12-01T00:00:00Z&endDate=2025-12-31T23:59:59Z" \
+curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?startDate=2025-12-01T00:00:00Z&endDate=2025-12-31T23:59:59Z" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -269,7 +269,7 @@ Retrieve a specific email message by ID or UUID.
 #### Example
 
 ```bash
-curl -X GET "https://app.audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0/email-abc-123" \
+curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0/email-abc-123" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 

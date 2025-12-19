@@ -507,7 +507,7 @@ const handleStreamEvent = (event) => {
 ### cURL Example
 
 ```bash
-curl -X POST "https://your-domain.com/api/space/workspace-123/chat/stream" \
+curl -X POST "https://audos.com/api/space/workspace-123/chat/stream" \
   -H "Content-Type: application/json" \
   -d '{
     "message": "What can you help me with?",
@@ -626,7 +626,7 @@ For real-time message notifications across devices:
 
 ```typescript
 // Subscribe to session updates
-const ws = new WebSocket(`wss://your-domain.com/ws`);
+const ws = new WebSocket(`wss://audos.com/ws`);
 
 ws.onopen = () => {
   ws.send(JSON.stringify({

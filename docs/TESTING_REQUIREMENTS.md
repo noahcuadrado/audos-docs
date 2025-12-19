@@ -8,7 +8,7 @@ This document outlines everything needed to test each documented API endpoint.
 
 ```bash
 # Required Environment Variables
-BASE_URL=http://localhost:3000  # or https://api.audoapps.com
+BASE_URL=http://localhost:3000  # or https://audos.com
 MAILGUN_API_KEY=key-xxxxx
 MAILGUN_DOMAIN=m.audoapps.com
 ```
@@ -491,7 +491,7 @@ To create a complete, runnable test suite, please provide:
 9. **Postman workspace link** (if you want me to create a collection)
 
 10. **Environment** (development, staging, production)
-    - Base URL: `http://localhost:3000` or `https://api.audoapps.com`
+    - Base URL: `http://localhost:3000` or `https://audos.com`
 
 ---
 

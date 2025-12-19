@@ -198,12 +198,20 @@ router.post('/:spaceId/chat/stream', async (req, res) => {
 ```typescript
 // POST /api/landing/:appId/register
 router.post('/:appId/register', async (req, res) => {
-  // 1. Create contact
-  const contact = await storage.createFunnelContact({
-    workspaceId: app.workspaceId,
-    email: req.body.email,
-    // ...
-  });
+  // 1. Deduplicate & Create contact
+  // Emails are normalized (lowercased and trimmed) for consistent lookup
+  const email = req.body.email.toLowerCase().trim();
+  
+  // Find existing contact or create new one
+  let contact = await storage.getFunnelContactByEmail(email, 'landing_page', appId);
+  
+  if (!contact) {
+    contact = await storage.createFunnelContact({
+      workspaceId: app.workspaceId,
+      email: email,
+      // ...
+    });
+  }
 
   // 2. Create session
   const session = await workspaceSessionService.createSession({
@@ -269,6 +277,8 @@ const activeContacts = await db
 ✅ **ON DELETE SET NULL** - Prevents orphaned records on session deletion
 
 ✅ **Automatic Linking** - Both space and landing page flows auto-link
+
+✅ **Contact Deduplication** - Landing page registrations reuse existing contact records based on email normalization (lowercase + trim)
 
 ## Use Cases
 

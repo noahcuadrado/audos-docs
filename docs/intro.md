@@ -34,7 +34,7 @@ Welcome to the Audos API documentation. This comprehensive guide covers all API 
 ### Base URL
 
 ```
-https://api.audoapps.com
+https://audos.com
 ```
 
 ### Authentication
@@ -43,7 +43,7 @@ Most endpoints require JWT Bearer token authentication:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  https://api.audoapps.com/api/endpoint
+  https://audos.com/api/endpoint
 ```
 
 ### Response Format

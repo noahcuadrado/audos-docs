@@ -80,7 +80,7 @@ console.log('AI Response:', data.assistantMessage.content);
 import requests
 
 response = requests.post(
-    'https://api.audoapps.com/api/entity-tags/contacts/contact_123/tags',
+    'https://audos.com/api/entity-tags/contacts/contact_123/tags',
     json={'tagId': 'wtag_abc123'}
 )
 
@@ -91,7 +91,7 @@ print(f"Tagged successfully, propagated to {result['propagatedToSessions']} sess
 ### cURL
 ```bash
 # Example: Send an email
-curl -X POST "https://api.audoapps.com/api/mailgun/send" \
+curl -X POST "https://audos.com/api/mailgun/send" \
   -H "Content-Type: application/json" \
   -d '{
     "workspaceId": "ws_123",

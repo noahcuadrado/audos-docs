@@ -66,9 +66,9 @@ All APIs use standard HTTP status codes:
 
 ## Base URLs
 
-- **Production:** `https://api.audoapps.com`
+- **Production:** `https://audos.com`
 - **Staging:** TBD
-- **Development:** `http://localhost:3000`
+- **Development:** `http://localhost:3000` (Replit dev URLs like `https://*.replit.dev` also work)
 
 ---
 

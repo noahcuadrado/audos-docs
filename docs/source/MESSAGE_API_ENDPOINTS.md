@@ -45,7 +45,7 @@ Two new endpoints for programmatically capturing messages in workspace chat sess
 
 **Example Request:**
 ```bash
-curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message/assistant" \
+curl -X POST "https://audos.com/api/workspace/123/session/wses_abc/message/assistant" \
   -H "Content-Type: application/json" \
   -d '{
     "message": "Your task has been completed successfully!",
@@ -164,7 +164,7 @@ curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message
 
 **Example Request (No Processing):**
 ```bash
-curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message/user" \
+curl -X POST "https://audos.com/api/workspace/123/session/wses_abc/message/user" \
   -H "Content-Type: application/json" \
   -d '{
     "message": "User logged in from mobile app",
@@ -179,7 +179,7 @@ curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message
 
 **Example Request (With Processing):**
 ```bash
-curl -X POST "https://api.example.com/api/workspace/123/session/wses_abc/message/user" \
+curl -X POST "https://audos.com/api/workspace/123/session/wses_abc/message/user" \
   -H "Content-Type: application/json" \
   -d '{
     "message": "What is my account balance?",

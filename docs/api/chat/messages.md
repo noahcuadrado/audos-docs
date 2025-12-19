@@ -74,7 +74,7 @@ Content-Type: application/json
 #### Example
 
 ```bash
-curl -X POST "https://app.audos.com/api/workspace/79849043-88b5-40ba-a93a-c1e088c4d9b0/session/wses_0cfdac077f0e4498a0e6fdd590df5f0a/message/assistant" \
+curl -X POST "https://audos.com/api/workspace/79849043-88b5-40ba-a93a-c1e088c4d9b0/session/wses_0cfdac077f0e4498a0e6fdd590df5f0a/message/assistant" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_AUTH_TOKEN" \
   -d '{
@@ -207,7 +207,7 @@ Content-Type: application/json
 
 **Without Processing (Archive Only):**
 ```bash
-curl -X POST "https://app.audos.com/api/workspace/79849043-88b5-40ba-a93a-c1e088c4d9b0/session/wses_0cfdac077f0e4498a0e6fdd590df5f0a/message/user" \
+curl -X POST "https://audos.com/api/workspace/79849043-88b5-40ba-a93a-c1e088c4d9b0/session/wses_0cfdac077f0e4498a0e6fdd590df5f0a/message/user" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_AUTH_TOKEN" \
   -d '{
@@ -223,7 +223,7 @@ curl -X POST "https://app.audos.com/api/workspace/79849043-88b5-40ba-a93a-c1e088
 
 **With LLM Processing:**
 ```bash
-curl -X POST "https://app.audos.com/api/workspace/79849043-88b5-40ba-a93a-c1e088c4d9b0/session/wses_0cfdac077f0e4498a0e6fdd590df5f0a/message/user" \
+curl -X POST "https://audos.com/api/workspace/79849043-88b5-40ba-a93a-c1e088c4d9b0/session/wses_0cfdac077f0e4498a0e6fdd590df5f0a/message/user" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_AUTH_TOKEN" \
   -d '{
