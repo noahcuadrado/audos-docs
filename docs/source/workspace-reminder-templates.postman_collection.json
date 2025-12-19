@@ -1,0 +1,427 @@
+{
+  "info": {
+    "_postman_id": "workspace-reminder-templates",
+    "name": "Workspace Reminder Templates API",
+    "description": "API collection for managing workspace reminder templates with complex timing, targeting, and content configurations.\n\n## Field Naming Conventions\n- Target fields use snake_case: `session_id`, `session_ids`, `exclude`\n- Content uses: `type` (text|prompt) and `value` (the message)\n- Duration format: `{ value: number, unit: 'mins'|'hours'|'days' }`\n- Query params: `status`, `sessionId`, `sessionUuid`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "workspaceId",
+      "value": "your-workspace-uuid",
+      "type": "string"
+    },
+    {
+      "key": "templateId",
+      "value": "your-template-uuid",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Template - At Specific Time",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Welcome Reminder\",\n  \"description\": \"Send welcome message at specific time\",\n  \"target\": {\n    \"type\": \"session\",\n    \"session_id\": \"session-123\"\n  },\n  \"delivery\": {\n    \"channel\": \"current\"\n  },\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"Welcome to our platform! Let us know if you need help.\"\n  },\n  \"when\": {\n    \"type\": \"at\",\n    \"datetime\": \"2024-12-15T10:00:00Z\",\n    \"timezone\": \"America/New_York\"\n  },\n  \"autoApply\": {\n    \"enabled\": false,\n    \"apply_to_new_sessions\": false\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Template - In Duration",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Follow-up in 24 Hours\",\n  \"description\": \"Send follow-up message 24 hours from now\",\n  \"target\": {\n    \"type\": \"session\",\n    \"session_id\": \"session-123\"\n  },\n  \"delivery\": {\n    \"channel\": \"email\"\n  },\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"Just checking in! How can we help you today?\"\n  },\n  \"when\": {\n    \"type\": \"in\",\n    \"duration\": {\n      \"value\": 24,\n      \"unit\": \"hours\"\n    }\n  },\n  \"autoApply\": {\n    \"enabled\": false,\n    \"apply_to_new_sessions\": false\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Template - After Inactivity",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Inactivity Nudge\",\n  \"description\": \"Remind user after 30 minutes of inactivity\",\n  \"target\": {\n    \"type\": \"session\",\n    \"session_id\": \"session-123\"\n  },\n  \"delivery\": {\n    \"channel\": \"current\"\n  },\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"Still there? Let me know if you have any questions!\"\n  },\n  \"when\": {\n    \"type\": \"after_inactivity\",\n    \"duration\": {\n      \"value\": 30,\n      \"unit\": \"mins\"\n    }\n  },\n  \"autoApply\": {\n    \"enabled\": true,\n    \"apply_to_new_sessions\": true\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Template - Natural Language",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Tomorrow Morning Reminder\",\n  \"description\": \"Send reminder using natural language timing\",\n  \"target\": {\n    \"type\": \"session\",\n    \"session_id\": \"session-123\"\n  },\n  \"delivery\": {\n    \"channel\": \"all\"\n  },\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"Good morning! Ready to continue where we left off?\"\n  },\n  \"when\": {\n    \"type\": \"natural\",\n    \"expression\": \"tomorrow at 9am\",\n    \"timezone\": \"America/Los_Angeles\"\n  },\n  \"autoApply\": {\n    \"enabled\": false,\n    \"apply_to_new_sessions\": false\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Template - Recurring Daily",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Daily Check-in\",\n  \"description\": \"Send daily check-in at 9am\",\n  \"target\": {\n    \"type\": \"all_sessions\"\n  },\n  \"delivery\": {\n    \"channel\": \"email\"\n  },\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"Good morning! Here's your daily update.\"\n  },\n  \"when\": {\n    \"type\": \"recurring\",\n    \"interval\": {\n      \"every\": 1,\n      \"unit\": \"days\"\n    },\n    \"at\": \"09:00\",\n    \"timezone\": \"America/New_York\",\n    \"start\": \"now\"\n  },\n  \"autoApply\": {\n    \"enabled\": true,\n    \"apply_to_new_sessions\": true\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Template - Recurring Weekly",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Weekly Summary\",\n  \"description\": \"Send weekly summary every Monday\",\n  \"target\": {\n    \"type\": \"all_sessions\"\n  },\n  \"delivery\": {\n    \"channel\": \"email\"\n  },\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"Here's your weekly summary!\"\n  },\n  \"when\": {\n    \"type\": \"recurring\",\n    \"interval\": {\n      \"every\": 1,\n      \"unit\": \"weeks\",\n      \"on\": [1]\n    },\n    \"at\": \"08:00\",\n    \"timezone\": \"UTC\"\n  },\n  \"autoApply\": {\n    \"enabled\": false,\n    \"apply_to_new_sessions\": false\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Template - Multiple Sessions Target",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Group Announcement\",\n  \"description\": \"Send to specific group of sessions\",\n  \"target\": {\n    \"type\": \"sessions\",\n    \"session_ids\": [\"session-1\", \"session-2\", \"session-3\"]\n  },\n  \"delivery\": {\n    \"channel\": \"current\"\n  },\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"Important announcement for your group!\"\n  },\n  \"when\": {\n    \"type\": \"in\",\n    \"duration\": {\n      \"value\": 1,\n      \"unit\": \"hours\"\n    }\n  },\n  \"autoApply\": {\n    \"enabled\": false,\n    \"apply_to_new_sessions\": false\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Template - AI Prompt Content",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Personalized Follow-up\",\n  \"description\": \"AI-generated personalized message\",\n  \"target\": {\n    \"type\": \"session\",\n    \"session_id\": \"session-123\"\n  },\n  \"delivery\": {\n    \"channel\": \"current\"\n  },\n  \"content\": {\n    \"type\": \"prompt\",\n    \"value\": \"Generate a friendly follow-up message based on the user's previous conversation. Keep it brief and helpful.\"\n  },\n  \"when\": {\n    \"type\": \"in\",\n    \"duration\": {\n      \"value\": 2,\n      \"unit\": \"hours\"\n    }\n  },\n  \"autoApply\": {\n    \"enabled\": false,\n    \"apply_to_new_sessions\": false\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Template - All Sessions Broadcast",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"System Announcement\",\n  \"description\": \"Broadcast to all sessions except excluded ones\",\n  \"target\": {\n    \"type\": \"all_sessions\",\n    \"exclude\": [\"admin-session-1\", \"test-session\"]\n  },\n  \"delivery\": {\n    \"channel\": \"all\"\n  },\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"We'll be performing scheduled maintenance tonight at 11pm EST.\"\n  },\n  \"when\": {\n    \"type\": \"at\",\n    \"datetime\": \"2024-12-10T18:00:00Z\",\n    \"timezone\": \"UTC\"\n  },\n  \"autoApply\": {\n    \"enabled\": false,\n    \"apply_to_new_sessions\": false\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Template - Recurring with Delayed Start",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Delayed Recurring\",\n  \"description\": \"Start recurring reminders after 2 days\",\n  \"target\": {\n    \"type\": \"session\",\n    \"session_id\": \"session-123\"\n  },\n  \"delivery\": {\n    \"channel\": \"email\"\n  },\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"Your recurring reminder is here!\"\n  },\n  \"when\": {\n    \"type\": \"recurring\",\n    \"interval\": {\n      \"every\": 2,\n      \"unit\": \"days\"\n    },\n    \"at\": \"10:00\",\n    \"timezone\": \"America/New_York\",\n    \"start\": {\n      \"in\": {\n        \"value\": 2,\n        \"unit\": \"days\"\n      }\n    }\n  },\n  \"autoApply\": {\n    \"enabled\": false,\n    \"apply_to_new_sessions\": false\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "List All Templates",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"]
+        }
+      }
+    },
+    {
+      "name": "List Templates - Filter by Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}?status=active",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"],
+          "query": [
+            {
+              "key": "status",
+              "value": "active",
+              "description": "Filter by status: pending, active, sent, cancelled"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List Templates - Filter by Session ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}?sessionId=123",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"],
+          "query": [
+            {
+              "key": "sessionId",
+              "value": "123",
+              "description": "Filter by workspace session ID (integer)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List Templates - Filter by Session UUID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}?sessionUuid=session-uuid-here",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"],
+          "query": [
+            {
+              "key": "sessionUuid",
+              "value": "session-uuid-here",
+              "description": "Filter by workspace session UUID"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List Templates - Combined Filters",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}?status=pending&sessionId=123",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}"],
+          "query": [
+            {
+              "key": "status",
+              "value": "pending"
+            },
+            {
+              "key": "sessionId",
+              "value": "123"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Single Template",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}/{{templateId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}", "{{templateId}}"]
+        }
+      }
+    },
+    {
+      "name": "Update Template",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Template Name\",\n  \"description\": \"Updated description\",\n  \"content\": {\n    \"type\": \"text\",\n    \"value\": \"Updated message content\"\n  },\n  \"when\": {\n    \"type\": \"in\",\n    \"duration\": {\n      \"value\": 2,\n      \"unit\": \"hours\"\n    }\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}/{{templateId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}", "{{templateId}}"]
+        }
+      }
+    },
+    {
+      "name": "Update Status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"active\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}/{{templateId}}/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}", "{{templateId}}", "status"]
+        }
+      }
+    },
+    {
+      "name": "Activate Template",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}/{{templateId}}/activate",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}", "{{templateId}}", "activate"]
+        }
+      }
+    },
+    {
+      "name": "Cancel Template",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reason\": \"No longer needed\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}/{{templateId}}/cancel",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}", "{{templateId}}", "cancel"]
+        }
+      }
+    },
+    {
+      "name": "Delete Template",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reminder-templates/{{workspaceId}}/{{templateId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "reminder-templates", "{{workspaceId}}", "{{templateId}}"]
+        }
+      }
+    }
+  ]
+}

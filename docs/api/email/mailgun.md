@@ -1,63 +1,347 @@
----
-id: mailgun
-title: Mailgun Email API
-sidebar_label: Mailgun API
-sidebar_position: 1
----
+# Mailgun API Endpoints
 
-# Mailgun Email API
-
-> **Status:** ✅ Documented  
-> **Trello Card:** [Email Integration Mailgun](https://trello.com/c/xyz)  
-> **Postman:** [Mailgun Email API Collection](https://lunar-escape-826616.postman.co/workspace/741e2a20-0047-4eba-8e76-85e9bd2f42a2/collection/33570542-d560cd71-f0c6-4ca4-9c94-a42b8335174b)
+Base URL: `{{baseUrl}}/api/mailgun`
 
 ## Overview
 
-Complete Mailgun email integration API for sending emails, tracking delivery, and managing email messages. This API handles both outbound and inbound email operations.
-
-**Base URL:** `/api/mailgun`
-
-## Authentication
-
-Most endpoints require JWT Bearer token authentication. Add your JWT token to the Authorization header:
-
-```
-Authorization: Bearer YOUR_JWT_TOKEN
-```
+The Mailgun API provides endpoints for sending emails, receiving inbound emails via webhooks, and managing email messages. All API routes (except webhooks) require authentication.
 
 ---
 
-## Endpoints
+## Webhook Endpoints (No Authentication)
 
-### 1. Health Check
+These endpoints are called by Mailgun servers and do not require authentication. They verify requests using Mailgun's webhook signature.
 
-**Endpoint:** `GET /api/mailgun/health`
+### POST /webhooks/inbound
 
-Check if the Mailgun service is properly configured and ready.
+Receive inbound emails from Mailgun.
 
-**Authentication:** Not required
+**Request Body** (multipart/form-data from Mailgun):
 
-#### Response (Configured)
+| Field | Type | Description |
+|-------|------|-------------|
+| `timestamp` | string | Unix timestamp of the event |
+| `token` | string | Unique token for signature verification |
+| `signature` | string | HMAC signature for verification |
+| `from` | string | Sender email address |
+| `sender` | string | Alternative sender field |
+| `recipient` | string | Recipient email address |
+| `To` | string | Alternative recipient field |
+| `subject` | string | Email subject |
+| `body-plain` | string | Plain text body |
+| `body-html` | string | HTML body |
+| `stripped-text` | string | Body with quoted text removed |
+| `stripped-signature` | string | Signature extracted from email |
+| `stripped-html` | string | HTML with quoted text removed |
+| `message-headers` | string | JSON string of email headers |
+| `Message-Id` | string | Unique message identifier |
+| `attachment-count` | string | Number of attachments |
+
+**Response:**
+
+```json
+{
+  "success": true
+}
+```
+
+**Error Responses:**
+
+| Status | Description |
+|--------|-------------|
+| 400 | Missing sender or recipient information |
+| 401 | Invalid webhook signature |
+| 500 | Internal server error |
+
+---
+
+### POST /webhooks/delivery
+
+Receive delivery events from Mailgun (delivered, opened, clicked, bounced, etc.).
+
+**Request Body** (JSON from Mailgun):
+
+```json
+{
+  "signature": {
+    "timestamp": "1234567890",
+    "token": "unique-token",
+    "signature": "hmac-signature"
+  },
+  "event-data": {
+    "event": "delivered",
+    "message": {
+      "headers": {
+        "message-id": "message-id@domain.com"
+      }
+    },
+    "recipient": "user@example.com",
+    "recipient-domain": "example.com",
+    "delivery-status": {
+      "code": 250,
+      "message": "OK"
+    }
+  }
+}
+```
+
+**Supported Events:**
+
+- `accepted` - Email accepted by Mailgun
+- `delivered` - Email delivered to recipient
+- `opened` - Email opened by recipient
+- `clicked` - Link in email clicked
+- `bounced` - Email bounced
+- `complained` - Recipient marked as spam
+- `unsubscribed` - Recipient unsubscribed
+
+**Response:**
+
+```json
+{
+  "success": true
+}
+```
+
+**Error Responses:**
+
+| Status | Description |
+|--------|-------------|
+| 401 | Invalid webhook signature |
+| 500 | Internal server error |
+
+---
+
+## API Endpoints (Authenticated)
+
+### POST /send
+
+Send an email via Mailgun.
+
+**Request Body:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `workspaceId` | string | Yes | Workspace identifier |
+| `to` | string | Yes | Recipient email address |
+| `subject` | string | Yes | Email subject (min 1 char) |
+| `text` | string | Yes | Plain text body (min 1 char) |
+| `html` | string | No | HTML body |
+| `from` | string | No | Sender address (defaults to workspace default) |
+| `replyTo` | string | No | Reply-to email address |
+| `sessionId` | string | No | Link to workspace session |
+| `sessionUuid` | string | No | Workspace session UUID |
+| `userId` | string | No | Link to workspace user |
+| `contactId` | string | No | Link to funnel contact |
+| `metadata` | object | No | Custom metadata for tracking |
+
+**Example Request:**
+
+```json
+{
+  "workspaceId": "ws_123",
+  "to": "user@example.com",
+  "subject": "Welcome!",
+  "text": "Hello and welcome to our platform.",
+  "html": "<h1>Hello</h1><p>Welcome to our platform.</p>",
+  "metadata": {
+    "campaign": "onboarding",
+    "step": "welcome"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "id": "wemail_abc123def456",
+  "mailgunMessageId": "<20231211120000.abc123@domain.com>",
+  "status": "sent"
+}
+```
+
+**Error Responses:**
+
+| Status | Description |
+|--------|-------------|
+| 400 | Validation error (invalid email, missing fields) |
+| 500 | Internal server error |
+
+---
+
+### GET /messages/:workspaceId
+
+Get email messages for a workspace with pagination and filtering.
+
+**Path Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `workspaceId` | string | Workspace identifier |
+
+**Query Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `limit` | number | 50 | Results per page (1-100) |
+| `offset` | number | 0 | Pagination offset |
+| `direction` | string | - | Filter by `inbound` or `outbound` |
+| `status` | string | - | Filter by status (see below) |
+| `from` | string | - | Filter by sender (partial match) |
+| `to` | string | - | Filter by recipient (partial match) |
+| `startDate` | string | - | Filter by date (ISO 8601 datetime) |
+| `endDate` | string | - | Filter by date (ISO 8601 datetime) |
+| `sessionId` | string | - | Filter by workspace session ID |
+| `contactId` | string | - | Filter by funnel contact ID |
+
+**Status Values:**
+
+- `pending`
+- `sent`
+- `delivered`
+- `failed`
+- `bounced`
+- `opened`
+- `clicked`
+- `complained`
+- `unsubscribed`
+
+**Example Request:**
+
+```
+GET /api/mailgun/messages/ws_123?limit=10&direction=outbound&status=delivered
+```
+
+**Response:**
+
+```json
+{
+  "messages": [
+    {
+      "id": "wemail_abc123",
+      "workspaceId": "ws_123",
+      "direction": "outbound",
+      "from": "sender@example.com",
+      "to": "recipient@example.com",
+      "subject": "Hello",
+      "status": "delivered",
+      "createdAt": "2023-12-11T12:00:00.000Z",
+      ...
+    }
+  ],
+  "pagination": {
+    "total": 100,
+    "limit": 10,
+    "offset": 0,
+    "hasMore": true
+  }
+}
+```
+
+**Error Responses:**
+
+| Status | Description |
+|--------|-------------|
+| 400 | Validation error |
+| 500 | Internal server error |
+
+---
+
+### GET /messages/:workspaceId/:messageId
+
+Get a specific email message by ID.
+
+**Path Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `workspaceId` | string | Workspace identifier |
+| `messageId` | string | Email message ID (e.g., `wemail_abc123`) |
+
+**Example Request:**
+
+```
+GET /api/mailgun/messages/ws_123/wemail_abc123
+```
+
+**Response:**
+
+```json
+{
+  "id": "wemail_abc123",
+  "workspaceId": "ws_123",
+  "workspaceSessionId": "wses_xyz789",
+  "workspaceSessionUuid": "session-uuid",
+  "funnelContactId": "contact_456",
+  "mailgunMessageId": "<20231211120000.abc123@domain.com>",
+  "direction": "outbound",
+  "from": "Sender Name <sender@example.com>",
+  "fromName": "Sender Name",
+  "fromEmail": "sender@example.com",
+  "to": "recipient@example.com",
+  "toName": null,
+  "toEmail": "recipient@example.com",
+  "subject": "Hello World",
+  "bodyPlain": "Hello, this is the email content.",
+  "bodyHtml": "<p>Hello, this is the email content.</p>",
+  "strippedText": "Hello, this is the email content.",
+  "attachments": [],
+  "attachmentCount": 0,
+  "status": "delivered",
+  "deliveredAt": "2023-12-11T12:00:05.000Z",
+  "openedAt": null,
+  "clickedAt": null,
+  "failedAt": null,
+  "errorMessage": null,
+  "createdAt": "2023-12-11T12:00:00.000Z",
+  "updatedAt": "2023-12-11T12:00:05.000Z"
+}
+```
+
+**Error Responses:**
+
+| Status | Description |
+|--------|-------------|
+| 404 | Email message not found |
+| 500 | Internal server error |
+
+---
+
+### GET /health
+
+Check Mailgun service health and configuration status.
+
+**Example Request:**
+
+```
+GET /api/mailgun/health
+```
+
+**Response (Configured):**
 
 ```json
 {
   "status": "ok",
   "configured": true,
-  "domain": "m.audoapps.com",
-  "defaultFrom": "noreply@m.audoapps.com"
+  "domain": "m.example.com",
+  "defaultFrom": "noreply@m.example.com"
 }
 ```
 
-#### Response (Not Configured)
+**Response (Not Configured):**
 
 ```json
 {
   "status": "not_configured",
   "configured": false,
-  "domain": "",
+  "domain": null,
   "defaultFrom": null
 }
 ```
+
+**Status Codes:**
 
 | Status | Description |
 |--------|-------------|
@@ -66,427 +350,60 @@ Check if the Mailgun service is properly configured and ready.
 
 ---
 
-### 2. Send Email
+## Email Message Object
 
-**Endpoint:** `POST /api/mailgun/send`
+The full email message object contains the following fields:
 
-Send an email via Mailgun and store it in the database.
-
-**Authentication:** JWT Bearer token required
-
-#### Request Body
-
-```json
-{
-  "workspaceId": "string (required)",
-  "to": "string (required) - recipient email",
-  "subject": "string (required)",
-  "text": "string (required) - plain text content",
-  "html": "string (optional) - HTML content",
-  "from": "string (optional) - custom sender email",
-  "replyTo": "string (optional) - reply-to address",
-  "sessionId": "string (optional) - workspace session ID",
-  "sessionUuid": "string (optional) - session UUID for linking",
-  "userId": "string (optional) - workspace user ID",
-  "contactId": "string (optional) - funnel contact ID",
-  "metadata": {
-    "source": "string (optional)",
-    "key": "any (optional)"
-  }
-}
-```
-
-#### Response
-
-```json
-{
-  "success": true,
-  "id": "email-uuid-123",
-  "uuid": "email-abc-def-456",
-  "mailgunMessageId": "<20251209120000.1.abc@m.audoapps.com>",
-  "status": "sent"
-}
-```
-
-#### Example: Basic Email
-
-```bash
-curl -X POST "https://audos.com/api/mailgun/send" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{
-    "workspaceId": "79849043-88b5-40ba-a93a-c1e088c4d9b0",
-    "to": "user@example.com",
-    "subject": "Test Email from Postman",
-    "text": "This is a test email sent from Postman",
-    "html": "<h1>Test Email</h1><p>This is a test email sent from Postman.</p>",
-    "metadata": {
-      "source": "postman",
-      "test": true
-    }
-  }'
-```
-
-#### Example: Email with Session Link
-
-```bash
-curl -X POST "https://audos.com/api/mailgun/send" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{
-    "workspaceId": "79849043-88b5-40ba-a93a-c1e088c4d9b0",
-    "to": "user@example.com",
-    "subject": "Email Linked to Session",
-    "text": "This email is linked to a workspace session.",
-    "html": "<h1>Session Email</h1><p>This email is linked to a workspace session.</p>",
-    "sessionId": "wses_7a2219c3d54a45eaa277046abebee943",
-    "sessionUuid": "space-me+crickify1@ehussain.in-7cd75493-4d0a-407b-a8dd-de74f864c6ae",
-    "metadata": {
-      "campaign": "onboarding",
-      "step": "welcome"
-    }
-  }'
-```
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier (e.g., `wemail_abc123`) |
+| `workspaceId` | string | Associated workspace |
+| `workspaceSessionId` | string | Linked workspace session (nullable) |
+| `workspaceSessionUuid` | string | Session UUID (nullable) |
+| `workspaceUserId` | string | Linked workspace user (nullable) |
+| `funnelContactId` | string | Linked funnel contact (nullable) |
+| `mailgunMessageId` | string | Mailgun's message ID |
+| `mailgunTimestamp` | timestamp | Mailgun event timestamp |
+| `direction` | string | `inbound` or `outbound` |
+| `from` | string | Full sender string |
+| `fromName` | string | Sender display name (nullable) |
+| `fromEmail` | string | Sender email address |
+| `to` | string | Full recipient string |
+| `toName` | string | Recipient display name (nullable) |
+| `toEmail` | string | Recipient email address |
+| `cc` | string | CC recipients (nullable) |
+| `bcc` | string | BCC recipients (nullable) |
+| `replyTo` | string | Reply-to address (nullable) |
+| `subject` | string | Email subject |
+| `bodyPlain` | string | Plain text body |
+| `bodyHtml` | string | HTML body (nullable) |
+| `strippedText` | string | Body without quoted text |
+| `strippedSignature` | string | Extracted signature |
+| `strippedHtml` | string | HTML without quoted text |
+| `attachments` | array | Attachment metadata |
+| `attachmentCount` | number | Number of attachments |
+| `messageHeaders` | object | Raw email headers |
+| `status` | string | Current status |
+| `deliveredAt` | timestamp | Delivery timestamp |
+| `openedAt` | timestamp | First open timestamp |
+| `clickedAt` | timestamp | First click timestamp |
+| `failedAt` | timestamp | Failure timestamp |
+| `bouncedAt` | timestamp | Bounce timestamp |
+| `errorMessage` | string | Error details (nullable) |
+| `createdAt` | timestamp | Record creation time |
+| `updatedAt` | timestamp | Last update time |
 
 ---
 
-### 3. Get Email Messages
-
-**Endpoint:** `GET /api/mailgun/messages/:workspaceId`
-
-Retrieve email messages for a workspace with pagination and filtering.
-
-**Authentication:** JWT Bearer token required
-
-#### Query Parameters
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `limit` | number | No | Number of messages (1-100, default: 50) |
-| `offset` | number | No | Pagination offset (default: 0) |
-| `direction` | string | No | Filter: `inbound` or `outbound` |
-| `status` | string | No | Filter: `pending`, `sent`, `delivered`, `failed`, `bounced`, `opened`, `clicked` |
-| `from` | string | No | Filter by sender (partial match) |
-| `to` | string | No | Filter by recipient (partial match) |
-| `startDate` | string | No | ISO 8601 date filter start |
-| `endDate` | string | No | ISO 8601 date filter end |
-| `sessionId` | string | No | Filter by workspace session ID |
-| `contactId` | string | No | Filter by funnel contact ID |
-
-#### Response
-
-```json
-{
-  "messages": [
-    {
-      "id": "email-123",
-      "uuid": "email-abc-123",
-      "workspaceId": "workspace-123",
-      "direction": "outbound",
-      "from": "Audos <noreply@m.audoapps.com>",
-      "to": "user@example.com",
-      "subject": "Welcome Email",
-      "status": "delivered",
-      "deliveredAt": "2025-12-09T12:30:00Z",
-      "createdAt": "2025-12-09T12:00:00Z"
-    }
-  ],
-  "pagination": {
-    "total": 150,
-    "limit": 50,
-    "offset": 0,
-    "hasMore": true
-  }
-}
-```
-
-#### Example: Get All Messages
-
-```bash
-curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?limit=50&offset=0" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
-#### Example: Get Outbound Emails
-
-```bash
-curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?direction=outbound&limit=20" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
-#### Example: Get Delivered Emails
-
-```bash
-curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?status=delivered&limit=20" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
-#### Example: Get Emails by Date Range
-
-```bash
-curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0?startDate=2025-12-01T00:00:00Z&endDate=2025-12-31T23:59:59Z" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
----
-
-### 4. Get Single Email Message
-
-**Endpoint:** `GET /api/mailgun/messages/:workspaceId/:emailId`
-
-Retrieve a specific email message by ID or UUID.
-
-**Authentication:** JWT Bearer token required
-
-#### URL Parameters
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `workspaceId` | string | Yes | Workspace ID |
-| `emailId` | string | Yes | Email message ID or UUID |
-
-#### Response
-
-```json
-{
-  "id": "email-123",
-  "uuid": "email-abc-123",
-  "workspaceId": "workspace-123",
-  "mailgunMessageId": "<20251209120000.1.abc@m.audoapps.com>",
-  "direction": "outbound",
-  "from": "Audos <noreply@m.audoapps.com>",
-  "to": "user@example.com",
-  "subject": "Welcome Email",
-  "bodyPlain": "Plain text content",
-  "bodyHtml": "<h1>Welcome</h1>",
-  "status": "delivered",
-  "deliveredAt": "2025-12-09T12:30:00Z",
-  "openedAt": "2025-12-09T12:35:00Z",
-  "createdAt": "2025-12-09T12:00:00Z"
-}
-```
-
-#### Example
-
-```bash
-curl -X GET "https://audos.com/api/mailgun/messages/79849043-88b5-40ba-a93a-c1e088c4d9b0/email-abc-123" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
----
-
-## Email Status Tracking
-
-### Status Flow
-
-```
-pending → sent → delivered → opened → clicked
-                    ↓
-                 bounced
-                    ↓
-                  failed
-```
-
-### Status Descriptions
-
-| Status | Description |
-|--------|-------------|
-| `pending` | Email queued for sending |
-| `sent` | Email sent to Mailgun servers |
-| `delivered` | Email delivered to recipient's inbox |
-| `opened` | Recipient opened the email |
-| `clicked` | Recipient clicked a link in the email |
-| `bounced` | Email bounced (invalid address, full inbox, etc.) |
-| `failed` | Delivery permanently failed |
-
----
-
-## Webhooks
-
-Mailgun sends webhook events for email status updates:
-
-### Webhook Events
-
-| Event | Description |
-|-------|-------------|
-| `delivered` | Email successfully delivered |
-| `opened` | Email opened by recipient |
-| `clicked` | Link clicked in email |
-| `bounced` | Email bounced |
-| `dropped` | Email dropped (spam, etc.) |
-| `complained` | Recipient marked as spam |
-| `unsubscribed` | Recipient unsubscribed |
-
-### Webhook Handler
-
-The system automatically processes Mailgun webhooks at:
-
-```
-POST /api/mailgun/webhooks
-```
-
----
-
-## Email Object Schema
-
-```typescript
-interface Email {
-  id: string;              // Internal ID
-  uuid: string;            // Public UUID
-  workspaceId: string;     // Workspace ID
-  mailgunMessageId: string; // Mailgun's message ID
-  direction: 'inbound' | 'outbound';
-  from: string;            // Sender email
-  to: string;              // Recipient email
-  subject: string;
-  bodyPlain: string;       // Plain text content
-  bodyHtml?: string;       // HTML content
-  status: EmailStatus;
-  metadata?: object;       // Custom metadata
-  sessionId?: string;      // Linked session ID
-  contactId?: string;      // Linked contact ID
-  createdAt: Date;
-  sentAt?: Date;
-  deliveredAt?: Date;
-  openedAt?: Date;
-  clickedAt?: Date;
-  bouncedAt?: Date;
-  failedAt?: Date;
-}
-```
-
----
-
-## Use Cases
-
-### 1. Transactional Emails
-
-```javascript
-// Send order confirmation
-await fetch('/api/mailgun/send', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer YOUR_TOKEN'
-  },
-  body: JSON.stringify({
-    workspaceId: 'workspace-123',
-    to: 'customer@example.com',
-    subject: 'Order Confirmation #12345',
-    text: 'Thank you for your order!',
-    html: '<h1>Order Confirmed</h1><p>Thank you for your order!</p>',
-    metadata: {
-      type: 'order_confirmation',
-      orderId: '12345'
-    }
-  })
-});
-```
-
-### 2. Session-Linked Emails
-
-```javascript
-// Send email linked to chat session
-await fetch('/api/mailgun/send', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer YOUR_TOKEN'
-  },
-  body: JSON.stringify({
-    workspaceId: 'workspace-123',
-    to: 'customer@example.com',
-    subject: 'Following up on our conversation',
-    text: 'Hi there, following up on our chat...',
-    sessionId: 'wses_abc123',
-    metadata: {
-      source: 'chat_followup'
-    }
-  })
-});
-```
-
-### 3. Bulk Email Retrieval
-
-```javascript
-// Get all undelivered emails for retry
-const response = await fetch(
-  '/api/mailgun/messages/workspace-123?status=pending&limit=100',
-  {
-    headers: { 'Authorization': 'Bearer YOUR_TOKEN' }
-  }
-);
-
-const { messages } = await response.json();
-console.log(`${messages.length} emails pending delivery`);
-```
-
----
-
-## Error Responses
-
-| Status | Description |
-|--------|-------------|
-| 400 | Bad Request - Invalid parameters |
-| 401 | Unauthorized - Invalid or missing JWT token |
-| 404 | Not Found - Email or workspace not found |
-| 500 | Server Error - Mailgun API error |
-| 503 | Service Unavailable - Mailgun not configured |
-
-### Error Response Format
-
-```json
-{
-  "error": "Error description",
-  "code": "ERROR_CODE",
-  "details": {}
-}
-```
-
----
-
-## Database Schema
-
-```sql
-CREATE TABLE mailgun_emails (
-  id VARCHAR(255) PRIMARY KEY,
-  uuid VARCHAR(255) UNIQUE NOT NULL,
-  workspace_id UUID NOT NULL,
-  mailgun_message_id VARCHAR(255),
-  direction ENUM('inbound', 'outbound') NOT NULL,
-  from_email VARCHAR(255) NOT NULL,
-  to_email VARCHAR(255) NOT NULL,
-  subject TEXT,
-  body_plain TEXT,
-  body_html TEXT,
-  status VARCHAR(50) DEFAULT 'pending',
-  metadata JSONB,
-  session_id VARCHAR(255),
-  contact_id VARCHAR(255),
-  created_at TIMESTAMP DEFAULT NOW(),
-  sent_at TIMESTAMP,
-  delivered_at TIMESTAMP,
-  opened_at TIMESTAMP,
-  clicked_at TIMESTAMP,
-  bounced_at TIMESTAMP,
-  failed_at TIMESTAMP,
-  INDEX idx_workspace (workspace_id),
-  INDEX idx_status (status),
-  INDEX idx_session (session_id),
-  INDEX idx_contact (contact_id)
-);
-```
-
----
-
-## Related Documentation
-
-- [Reminder Templates API](./reminders.md) - Scheduled email reminders
-- [Webhook Integration](../webhooks/mailgun.md) - Email event webhooks
-- [Contact Management](../contacts/README.md) - Link emails to contacts
-
----
-
-**Implementation Status:** ✅ Complete  
-**Last Updated:** December 2025  
-**Maintained By:** Backend Team
+## Environment Variables
+
+The Mailgun service requires the following environment variables:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `MAILGUN_API_KEY` | Yes | Mailgun API key |
+| `MAILGUN_DOMAIN` | Yes | Mailgun sending domain |
+| `MAILGUN_WEBHOOK_SIGNING_KEY` | Yes | Webhook signature verification key |
+| `MAILGUN_FROM_EMAIL` | No | Default sender email |
+| `MAILGUN_FROM_NAME` | No | Default sender name |
+| `MAILGUN_SKIP_SIGNATURE_VERIFICATION` | No | Skip signature check in development |

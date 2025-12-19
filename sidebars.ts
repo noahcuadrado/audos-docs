@@ -14,6 +14,9 @@ const sidebars: SidebarsConfig = {
       items: [
         'api/chat/streaming',
         'api/chat/messages',
+        'api/chat/instagram-session-init',
+        'api/chat/instagram-contact-upsert',
+        'api/chat/secure-session-link',
       ],
     },
     {
@@ -23,6 +26,15 @@ const sidebars: SidebarsConfig = {
       items: [
         'api/email/mailgun',
         'api/email/reminders',
+        'api/email/reminder-templates',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'AI API',
+      collapsed: false,
+      items: [
+        'api/ai/document-analysis',
       ],
     },
     {
@@ -38,6 +50,16 @@ const sidebars: SidebarsConfig = {
   architectureSidebar: [
     {
       type: 'category',
+      label: 'Core Concepts',
+      collapsed: false,
+      items: [
+        'architecture/workspace-space-architecture',
+        'architecture/claude-agent-architectures',
+        'architecture/space-runtime-file-access',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Database',
       collapsed: false,
       items: [
@@ -48,6 +70,45 @@ const sidebars: SidebarsConfig = {
             'architecture/database/relationships/contacts-sessions',
           ],
         },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Editor Design',
+      collapsed: false,
+      items: [
+        'architecture/editor/section-based-editing',
+        'architecture/editor/enhanced-sectioning-design',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'UI/UX Systems',
+      collapsed: false,
+      items: [
+        'architecture/ui/icon-fallback-system',
+      ],
+    },
+  ],
+  integrationsSidebar: [
+    {
+      type: 'category',
+      label: 'Integrations',
+      collapsed: false,
+      items: [
+        'integrations/inventory',
+      ],
+    },
+  ],
+  guidesSidebar: [
+    {
+      type: 'category',
+      label: 'Feature Guides',
+      collapsed: false,
+      items: [
+        'guides/deep-link-feature',
+        'guides/subdomain-url-resolution',
+        'guides/unified-editor-testing',
       ],
     },
   ],

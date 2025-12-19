@@ -13,21 +13,29 @@ System architecture, database schemas, and data flow documentation.
 ### 📚 [Guides](./guides/README.md)
 Step-by-step guides and tutorials for common tasks and integrations.
 
+### 🔌 [Integrations](./integrations/inventory.md)
+Inventory of available platform capabilities and autopilot integrations.
+
 ## Quick Links
 
 ### Chat & Messaging
 - [Chat Streaming API](./api/chat/streaming.md) - Real-time chat with SSE
-- [Message API](./api/chat/messages.md) - Programmatic message capture
+- [Instagram Session Init](./api/chat/instagram-session-init.md) - Resolve or create Instagram sessions
+- [Secure Session Link](./api/chat/secure-session-link.md) - Time-limited access tokens
+
+### AI & Automation
+- [Document Analysis](./api/ai/document-analysis.md) - GPT-4o Vision for PDFs and Images
+- [Claude Agent Architectures](./architecture/claude-agent-architectures.md) - SDK implementation details
+- [Deep Linking Feature](./guides/deep-link-feature.md) - App deep linking guide
 
 ### Email Services
 - [Mailgun Integration](./api/email/mailgun.md) - Email sending and tracking
 - [Reminder System](./api/email/reminders.md) - Automated email reminders
+- [Reminder Templates](./api/email/reminder-templates.md) - Recurring reminder patterns
 
-### Tagging System
-- [Workspace Tags](./api/tagging/workspace-tags.md) - Tag definitions and management
-- [Entity Tags](./api/tagging/entity-tags.md) - Contact and session tagging
-
-### Database
+### Architecture
+- [Workspace & Space Design](./architecture/workspace-space-architecture.md) - Dual-layer architecture
+- [Editor Sectioning](./architecture/editor/enhanced-sectioning-design.md) - Advanced sectioning design
 - [Contacts & Sessions](./architecture/database/relationships/contacts-sessions.md) - Funnel contacts and workspace sessions relationship
 
 ## Contributing
@@ -46,4 +54,4 @@ When adding new documentation:
 
 ---
 
-**Last Updated:** December 15, 2025
+**Last Updated:** December 19, 2025
