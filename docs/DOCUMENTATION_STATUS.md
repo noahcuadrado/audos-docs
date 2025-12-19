@@ -37,9 +37,10 @@ I've created a comprehensive documentation structure for the Audos platform base
 - **[Reminder Templates API](./api/email/reminders.md)** ✅ Complete
   - Template management
   - Contact-based email delivery
+  - Instagram DM channel support
   - Name personalization
   - Testing results included
-  - Based on cards: [TVL6Stez](https://trello.com/c/TVL6Stez/3159), [jMtjFpMZ](https://trello.com/c/jMtjFpMZ/3174)
+  - Based on cards: [TVL6Stez](https://trello.com/c/TVL6Stez/3159), [jMtjFpMZ](https://trello.com/c/jMtjFpMZ/3174), Instagram Reminder Channel Support
 
 #### Tagging System
 - **[Workspace Tags API](./api/tagging/workspace-tags.md)** ✅ Complete

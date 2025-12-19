@@ -26,6 +26,9 @@ Workspace Reminder Templates system for scheduling and delivering automated remi
 3. [Target Types](#target-types)
 4. [Content Types](#content-types)
 5. [Delivery Channels](#delivery-channels)
+    - [Current (Browser)](#current-browser)
+    - [Email](#email-1)
+    - [Instagram](#instagram-1)
 6. [Status Workflow](#status-workflow)
 7. [Processor Control](#processor-control)
 8. [Auto Apply](#auto-apply)
@@ -521,7 +524,12 @@ Deliver via email.
 
 ### Instagram
 
-Deliver via Instagram DM.
+Deliver automated reminders via Instagram DM.
+
+**Requirements:**
+- The target contact or session must have a valid `ig_user_id` populated in the `funnel_contacts` or `workspace_sessions` table.
+- The workspace must have the Meta/Instagram integration configured.
+- The `AUDOS_API_KEY` environment variable must be correctly set for the reminder processor.
 
 ```json
 {
@@ -530,6 +538,11 @@ Deliver via Instagram DM.
   }
 }
 ```
+
+#### Behavior
+- **Contact Reminders:** When a `funnelContactId` is specified, the `deliverInstagramReminder()` method uses `metaService.sendInstagramMessage()` to route the message using the contact's `ig_user_id`.
+- **Session Reminders:** When a `workspaceSessionId` is specified, the `deliverInstagramSessionReminder()` method delivers the DM using the session's Instagram context.
+- **Deduplication & Validation:** The system ensures that either a `sessionId` or `contactId` is provided before attempting the Meta API call.
 
 ### All Channels
 
