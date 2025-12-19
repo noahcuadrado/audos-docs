@@ -236,7 +236,7 @@ Remove direct tag from session only (does not affect contact).
 
 **Endpoint:** `POST /api/entity-tags/sessions/:sessionId/sync-tags?workspaceId={workspaceId}`
 
-Sync all contact tags to a session (refresh inherited tags).
+Sync all contact tags to a session (refresh inherited tags). This endpoint recalculates inheritance rules and ensures the session reflects all tags currently applied to its linked contact.
 
 #### Query Parameters
 

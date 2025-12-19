@@ -201,6 +201,28 @@ Create multiple tags at once.
 
 ---
 
+### Check Tag Exists
+
+**Endpoint:** `HEAD /api/workspace-tags/:workspaceId/check/:name`
+
+Check if a tag exists by name without retrieving its details. Useful for pre-flight checks before creation.
+
+#### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `workspaceId` | string | Yes | The workspace ID |
+| `name` | string | Yes | The tag name to check |
+
+#### Response Codes
+
+| Status | Description |
+|--------|-------------|
+| 200 | Tag exists |
+| 404 | Tag does not exist |
+
+---
+
 ### Bulk Delete Tags
 
 **Endpoint:** `DELETE /api/workspace-tags/bulk/delete`
