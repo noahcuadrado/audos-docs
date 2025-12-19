@@ -60,18 +60,21 @@ const getApiBasePath = () => {
 
 ### Storage Operations
 
-#### readFile(path: string): Promise<string>
+#### `readFile(path: string)`
 - Reads a file from mode-appropriate storage
+- Returns `Promise<string>`
 - **Entrepreneur mode**: Throws error for non-existent files (template files should exist)
 - **Customer mode**: Returns empty object `{}` for non-existent files (graceful fallback for new instances)
 - Security: Validates path to prevent traversal attacks
 
-#### writeFile(path: string, content: string): Promise<void>
+#### `writeFile(path: string, content: string)`
 - Writes content to mode-appropriate storage
+- Returns `Promise<void>`
 - Security: Validates path to prevent traversal attacks
 
-#### listFiles(dirPath?: string): Promise<FileInfo[]>
+#### `listFiles(dirPath?: string)`
 - Lists files in a directory
+- Returns `Promise<FileInfo[]>`
 - Returns array of `{ path, size, isDirectory }`
 
 ### Path Security Validation

@@ -16,6 +16,7 @@ POST /api/workspace/:workspaceId/session/init
 - **Session Resolution**: Match by stable `ig_user_id` (unchanging Instagram user identifier)
 - **Automatic Creation**: Create new session if no match found
 - **Contact Linking**: Automatically creates/links `funnel_contact` record
+- **Context Support**: Supports `contextType` and `contextId` for space or landing page contexts
 
 ## Request
 
@@ -33,7 +34,9 @@ POST /api/workspace/:workspaceId/session/init
   "ig_user_id": "1784....",
   "ig_username": "username_here",
   "ig_thread_id": "optional_thread_id",
-  "idempotencyKey": "meta_event_id_or_hash_optional"
+  "idempotencyKey": "meta_event_id_or_hash_optional",
+  "contextType": "space",
+  "contextId": "space-123"
 }
 ```
 
@@ -46,6 +49,8 @@ POST /api/workspace/:workspaceId/session/init
 | `ig_username` | string | Yes | Instagram username (display name, can change) |
 | `ig_thread_id` | string | No | Instagram thread ID for debugging |
 | `idempotencyKey` | string | No | Meta event ID or hash for idempotency (not stored) |
+| `contextType` | string | No | Context type: `"space"`, `"landing_page"`, or `"workspace"`. Defaults to `"space"` |
+| `contextId` | string | No | Context ID. Defaults to `ig_user_id` if not provided |
 
 ## Response
 
@@ -67,7 +72,7 @@ POST /api/workspace/:workspaceId/session/init
 |-------|------|-------------|
 | `success` | boolean | Always `true` for successful requests |
 | `sessionId` | string | Workspace session ID (format: `wses_*`) |
-| `contactId` | string | Funnel contact ID (format: `fc_*`) |
+| `contactId` | string | Funnel contact ID (format: `contact_*`) |
 | `isNewSession` | boolean | `true` if session was created, `false` if existing |
 | `matchType` | string | `"ig_user_id"` if matched existing, `"created"` if new |
 
@@ -115,8 +120,9 @@ POST /api/workspace/:workspaceId/session/init
 
 1. **Primary Match**: Search for existing session by `(workspaceId, ig_user_id)`
 2. **Username Update**: If session exists but `ig_username` changed, update it
-3. **Contact Linking**: Find or create `funnel_contact` linked to session
-4. **New Session**: If no match, create new session with all Instagram fields
+3. **Context Update**: If session exists but `contextType` or `contextId` changed, update them in both `workspace_sessions` and `funnel_contacts`
+4. **Contact Linking**: Find or create `funnel_contact` linked to session
+5. **New Session**: If no match, create new session with all Instagram fields and context
 
 ### Database Operations
 
@@ -124,9 +130,10 @@ POST /api/workspace/:workspaceId/session/init
 
 1. Query `workspace_sessions` by `(workspace_id, ig_user_id)`
 2. Update `ig_username` if changed
-3. Find `funnel_contact` by `workspace_session_id`
-4. Create contact if not found
-5. Return session and contact IDs
+3. Update `contextType` and `contextId` if changed
+4. Find `funnel_contact` by `workspace_session_id`
+5. Create contact if not found
+6. Return session and contact IDs
 
 #### New Session Created
 
@@ -138,11 +145,14 @@ POST /api/workspace/:workspaceId/session/init
    - `ig_user_id`: stable identifier
    - `ig_username`: display name
    - `ig_thread_id`: optional thread ID
+   - `contextType`: provided or default (`"space"`)
+   - `contextId`: provided or default (`ig_user_id`)
 3. Insert into `funnel_contacts` with:
    - `workspace_session_id`: new session ID
    - `channel`: `"instagram"`
    - `channel_instagram`: `ig_username`
    - `metadata`: Instagram user details
+   - `contextType`: provided or default (`"space"`)
 4. Return new session and contact IDs
 
 ## Examples
@@ -152,13 +162,15 @@ POST /api/workspace/:workspaceId/session/init
 **Request:**
 
 ```bash
-curl -X POST https://api.example.com/api/workspace/ws_123/session/init \
+curl -X POST https://audos.com/api/workspace/ws_123/session/init \
   -H "Content-Type: application/json" \
   -d '{
     "channel": "instagram",
     "ig_user_id": "1784567890",
     "ig_username": "john_doe",
-    "ig_thread_id": "t_abc123"
+    "ig_thread_id": "t_abc123",
+    "contextType": "space",
+    "contextId": "space-123"
   }'
 ```
 
@@ -168,7 +180,7 @@ curl -X POST https://api.example.com/api/workspace/ws_123/session/init \
 {
   "success": true,
   "sessionId": "wses_new123",
-  "contactId": "fc_contact456",
+  "contactId": "contact_contact456",
   "isNewSession": true,
   "matchType": "created"
 }
@@ -179,7 +191,7 @@ curl -X POST https://api.example.com/api/workspace/ws_123/session/init \
 **Request:**
 
 ```bash
-curl -X POST https://api.example.com/api/workspace/ws_123/session/init \
+curl -X POST https://audos.com/api/workspace/ws_123/session/init \
   -H "Content-Type: application/json" \
   -d '{
     "channel": "instagram",
@@ -195,7 +207,7 @@ curl -X POST https://api.example.com/api/workspace/ws_123/session/init \
 {
   "success": true,
   "sessionId": "wses_existing123",
-  "contactId": "fc_contact456",
+  "contactId": "contact_contact456",
   "isNewSession": false,
   "matchType": "ig_user_id"
 }
@@ -212,7 +224,7 @@ After obtaining the session ID, use it to send messages:
 SESSION_ID=$(curl -X POST .../session/init -d '{"channel":"instagram",...}' | jq -r '.sessionId')
 
 # Step 2: Send message using the session ID
-curl -X POST https://api.example.com/api/workspace/ws_123/session/$SESSION_ID/message/user \
+curl -X POST https://audos.com/api/workspace/ws_123/session/$SESSION_ID/message/user \
   -H "Content-Type: application/json" \
   -d '{
     "message": "Hello from Instagram!",
@@ -262,12 +274,7 @@ WHERE ig_user_id IS NOT NULL;
 
 ### funnel_contacts Table
 
-Linked via `workspace_session_id`:
-
-```sql
--- Existing schema, no changes needed
--- Links to workspace_sessions.id
-```
+Linked via `workspace_session_id`. IDs now generated with `contact_` prefix.
 
 ## Performance Considerations
 
@@ -301,6 +308,13 @@ See `server/routes/api/__tests__/instagram-session-init.test.ts` for comprehensi
 - `GET /api/workspace/:workspaceId/chat/history` - Get chat history
 
 ## Changelog
+
+### Version 1.1.0 (2025-12-19)
+
+- Added `contextType` and `contextId` support
+- `contextType` defaults to `"space"`
+- `contextId` defaults to `ig_user_id`
+- Contact IDs now use `contact_` prefix
 
 ### Version 1.0.0 (2025-12-16)
 

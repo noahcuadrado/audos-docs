@@ -26,6 +26,12 @@ I've created a comprehensive documentation structure for the Audos platform base
   - WebSocket broadcasting
   - Based on card: [8lUwoSFh](https://trello.com/c/8lUwoSFh/3147)
 
+- **[Instagram Session Init API](./api/chat/instagram-session-init.md)** ✅ Complete
+  - Session initialization for Instagram
+  - Context support
+  - Contact creation
+  - Based on card: [YSL5aY5X](https://trello.com/c/YSL5aY5X/3182)
+
 #### Email Services
 - **[Mailgun Integration](./api/email/mailgun.md)** ✅ Complete
   - Email sending and tracking
@@ -91,7 +97,8 @@ docs/
 │   ├── README.md                     ✅ API overview
 │   ├── chat/
 │   │   ├── streaming.md              ✅ Chat streaming API
-│   │   └── messages.md               ✅ Message capture API
+│   │   ├── messages.md               ✅ Message capture API
+│   │   └── instagram-session-init.md ✅ Instagram session init API
 │   ├── email/
 │   │   ├── mailgun.md                ✅ Mailgun integration
 │   │   └── reminders.md              ✅ Reminder templates

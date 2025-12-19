@@ -27,7 +27,7 @@ No authentication required (internal API for Osborn integration).
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `workspaceId` | string | Yes | Workspace UUID, configId, or space-{configId} format |
+| `workspaceId` | string | Yes | Workspace UUID, `configId`, or `space-{configId}` format |
 | `sessionId` | string | Yes | Session ID (wses_xxx format) returned from session init |
 
 ### Request Body
@@ -80,7 +80,9 @@ No authentication required (internal API for Osborn integration).
       "code": "invalid_type",
       "expected": "string",
       "received": "undefined",
-      "path": ["ig_user_id"],
+      "path": [
+        "ig_user_id"
+      ],
       "message": "ig_user_id is required"
     }
   ]
