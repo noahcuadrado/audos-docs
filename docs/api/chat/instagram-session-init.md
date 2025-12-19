@@ -24,7 +24,7 @@ POST /api/workspace/:workspaceId/session/init
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `workspaceId` | string | Yes | Workspace UUID, configId, or space-{configId} format |
+| `workspaceId` | string | Yes | Workspace UUID, `configId`, or `space-{configId}` format |
 
 ### Request Body
 

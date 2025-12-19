@@ -38,7 +38,8 @@ No authentication required (internal API for Osborn integration).
   "ig_user_id": "1784....",
   "ig_username": "username_here",
   "contact": {
-    "displayName": "Jane Doe",
+    "firstName": "Jane",
+    "lastName": "Doe",
     "profilePhotoUrl": "https://..."
   },
   "refreshedAt": "2025-12-15T20:05:12Z"
@@ -53,7 +54,8 @@ No authentication required (internal API for Osborn integration).
 | `ig_user_id` | string | Yes | Instagram user ID (stable identifier) |
 | `ig_username` | string | Yes | Instagram username (can change) |
 | `contact` | object | Yes | Contact profile data |
-| `contact.displayName` | string | No | User's display name from Instagram |
+| `contact.firstName` | string | No | First name from Instagram profile |
+| `contact.lastName` | string | No | Last name from Instagram profile |
 | `contact.profilePhotoUrl` | string (URL) | No | URL to user's profile photo |
 | `refreshedAt` | string (ISO 8601) | No | Timestamp when profile was fetched |
 
@@ -156,18 +158,19 @@ sequenceDiagram
 
 ## Usage Examples
 
-### Example 1: Update Contact with Display Name
+### Example 1: Update Contact with Name
 
 ```bash
 curl -X POST \
-  'https://api.example.com/api/workspace/6e030953-c762-4b4a-bd72-561146ee8c70/session/wses_abc123/contact-upsert' \
+  'https://audos.com/api/workspace/6e030953-c762-4b4a-bd72-561146ee8c70/session/wses_abc123/contact-upsert' \
   -H 'Content-Type: application/json' \
   -d '{
     "platform": "instagram",
     "ig_user_id": "1784567890",
     "ig_username": "johndoe",
     "contact": {
-      "displayName": "John Doe"
+      "firstName": "John",
+      "lastName": "Doe"
     },
     "refreshedAt": "2025-12-15T20:05:12Z"
   }'
@@ -184,7 +187,7 @@ curl -X POST \
 
 ```bash
 curl -X POST \
-  'https://api.example.com/api/workspace/518710/session/wses_xyz789/contact-upsert' \
+  'https://audos.com/api/workspace/518710/session/wses_xyz789/contact-upsert' \
   -H 'Content-Type: application/json' \
   -d '{
     "platform": "instagram",
@@ -203,18 +206,19 @@ curl -X POST \
 }
 ```
 
-### Example 3: Update Contact with Both Fields
+### Example 3: Update Contact with All Fields
 
 ```bash
 curl -X POST \
-  'https://api.example.com/api/workspace/space-518710/session/wses_def456/contact-upsert' \
+  'https://audos.com/api/workspace/space-518710/session/wses_def456/contact-upsert' \
   -H 'Content-Type: application/json' \
   -d '{
     "platform": "instagram",
     "ig_user_id": "1784567890",
     "ig_username": "johndoe",
     "contact": {
-      "displayName": "John Doe",
+      "firstName": "John",
+      "lastName": "Doe",
       "profilePhotoUrl": "https://scontent.cdninstagram.com/v/t51.2885-19/..."
     },
     "refreshedAt": "2025-12-15T20:05:12Z"
@@ -236,7 +240,8 @@ The endpoint updates the following fields in the `funnel_contacts` table:
 |-------|-------------|
 | `ig_user_id` | Instagram user ID (stable identifier) |
 | `ig_username` | Instagram username (display name) |
-| `first_name` | Set to `displayName` if provided |
+| `first_name` | Set to `contact.firstName` if provided |
+| `last_name` | Set to `contact.lastName` if provided |
 | `profile_photo_url` | Profile photo URL if provided |
 | `updated_at` | Set to `refreshedAt` or current timestamp |
 | `metadata` | Extended with Instagram profile info |
@@ -269,7 +274,7 @@ This endpoint is idempotent - calling it multiple times with the same data will:
 
 4. **Timestamp Tracking**: Use `refreshedAt` to track when profile data was last fetched from Instagram
 
-5. **Partial Updates**: You can update just the display name, just the photo, or both - all fields are optional
+5. **Partial Updates**: You can update just the names, just the photo, or both - all fields are optional
 
 6. **Username Changes**: Instagram usernames can change - always send the latest `ig_username` to keep records up to date
 
@@ -286,7 +291,7 @@ This endpoint is idempotent - calling it multiple times with the same data will:
 |---------------------|----------------|-------|
 | `id` | `ig_user_id` | Stable user identifier |
 | `username` | `ig_username` | Can change over time |
-| `name` | `first_name` | Display name |
+| `name` (split) | `first_name`, `last_name` | Display name is split |
 | `profile_pic` | `profile_photo_url` | Profile photo URL |
 
 ### Performance Considerations

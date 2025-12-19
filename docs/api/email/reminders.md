@@ -165,7 +165,7 @@ const DEFAULT_CONFIG = {
 
 - **browser**: Sends message to active WebSocket session
 - **email**: Sends via configured email provider
-- **instagram**: Sends via Instagram messaging API
+- **instagram**: Sends via Instagram messaging API (Requires `ig_user_id` on the contact or session)
 
 ---
 
@@ -262,7 +262,7 @@ Build task runner that executes multi-step workflows as single scheduled job.
 
 ## Usage Examples
 
-### Create a One-Time Reminder
+### Create a One-Time Reminder (Email)
 
 ```javascript
 const response = await fetch('/api/workspace-reminders/', {
@@ -274,6 +274,22 @@ const response = await fetch('/api/workspace-reminders/', {
     channel: 'email',
     nextReminderAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     message: 'Your Chiefs game recap is ready!'
+  })
+});
+```
+
+### Create a One-Time Reminder (Instagram)
+
+```javascript
+const response = await fetch('/api/workspace-reminders/', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    workspaceId: 'ws-fanforge-123',
+    workspaceSessionId: 'session-user-789',
+    channel: 'instagram',
+    nextReminderAt: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+    message: 'Check out the latest updates!'
   })
 });
 ```

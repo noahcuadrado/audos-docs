@@ -32,6 +32,12 @@ I've created a comprehensive documentation structure for the Audos platform base
   - Contact creation
   - Based on card: [YSL5aY5X](https://trello.com/c/YSL5aY5X/3182)
 
+- **[Instagram Contact Upsert API](./api/chat/instagram-contact-upsert.md)** ✅ Complete
+  - Asynchronous profile updates
+  - Display name and photo enrichment
+  - Idempotent updates
+  - Based on card: [RShfQGpr](https://trello.com/c/RShfQGpr/3172)
+
 #### Email Services
 - **[Mailgun Integration](./api/email/mailgun.md)** ✅ Complete
   - Email sending and tracking
